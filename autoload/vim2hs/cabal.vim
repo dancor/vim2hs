@@ -9,10 +9,10 @@ function! vim2hs#cabal#comments() " {{{
 endfunction " }}}
 
 
-function! vim2hs#cabal#constants() " {{{
+function! vim2hs#cabal#defines() " {{{
   setlocal iskeyword=a-z,A-Z,-
 
-  syntax match cabalConstant
+  syntax match cabalDefine
     \ "^\s*\k\+\s*:\@="
     \ display nextgroup=cabalDelimiter
 
@@ -20,7 +20,7 @@ function! vim2hs#cabal#constants() " {{{
     \ ":"
     \ display contained
 
-  highlight! link cabalConstant Constant
+  highlight! link cabalDefine Define
   highlight! link cabalDelimiter Delimiter
 endfunction " }}}
 
@@ -52,6 +52,18 @@ function! vim2hs#cabal#conditionals() " {{{
   highlight! link cabalKeyword Keyword
   highlight! link cabalIdentifier Identifier
   highlight! link cabalConditional Conditional
+endfunction " }}}
+
+
+function! vim2hs#cabal#folds() " {{{
+  syntax region cabalFold
+    \ start='\c^\%(flag\|source-repository\|test-suite\|benchmark\|executable\|library\)\>'
+    \ skip='\n#\|\n--'
+    \ end='\ze\%(\s*\n\)\+\S'
+    \ transparent fold
+
+  setlocal foldmethod=syntax
+  setlocal foldtext=getline(v:foldstart)
 endfunction " }}}
 
 

@@ -1,6 +1,6 @@
 function! vim2hs#haskell#syntax#operators() " {{{
   syntax match hsOperator
-    \ "[([:blank:]]\@<=[-!#$%&\*\+/=\?@\\^|~.<>][-!#$%&\*\+/=\?@\\^|~:.<>]*\ze\_[[:blank:])]"
+    \ '[([:blank:]]\@<=\%([[:upper:]]\k*\.\)*[-!#$%&\*\+/=\?@\\^|~.<>][-!#$%&\*\+/=\?@\\^|~:.<>]*\ze\_[[:blank:])]'
     \ display
 
   syntax match hsOperator
@@ -51,13 +51,13 @@ function! vim2hs#haskell#syntax#keywords(conceal_wide, conceal_enumerations, con
 
   if !a:conceal_wide
     syntax match hsStructure
-      \ "[[:punct:]]\@<!\%(->\|<-\|::\)[[:punct:]]\@!"
+      \ "[[:punct:]]\@<!\%(->\|→\|<-\|←\|::\|∷\)[[:punct:]]\@!"
       \ display
   endif
 
   if !a:conceal_bad
     syntax match hsStructure
-      \ "[[:punct:]]\@<!\%(=>\|-<<\?\)[[:punct:]]\@!"
+      \ "[[:punct:]]\@<!\%(=>\|⇒\|-<<\?\)[[:punct:]]\@!"
       \ display
   endif
 
@@ -85,7 +85,7 @@ endfunction " }}}
 
 function! vim2hs#haskell#syntax#types() " {{{
   syntax match hsType
-    \ "^\(\s*\)\%(\k\+\|([^[:alnum:]]\+)\)\s*::.*\%(\n\1\s.*\)*"
+    \ "^\(\s*\)\%(default\s\+\)\?\%(\k\+\|([^[:alnum:]]\+)\)\_s*\(::\|∷\).*\%(\n\1\s.*\)*"
     \ contains=TOP,@Spell
 
   highlight! link hsType Type
@@ -115,7 +115,7 @@ function! vim2hs#haskell#syntax#folds() " {{{
 endfunction " }}}
 
 
-function! vim2hs#haskell#syntax#strings() " {{{
+function! vim2hs#haskell#syntax#strings(multiline_strings) " {{{
   syntax match hsSpecialChar
     \ contained
     \ "\\\%([0-9]\+\|o[0-7]\+\|
@@ -142,15 +142,28 @@ function! vim2hs#haskell#syntax#strings() " {{{
     \ "^'\%([^\\]\|\\[^']\+\|\\'\)'"
     \ contains=hsSpecialChar,hsSpecialCharError
 
-  syntax region hsStringError
-    \ start=+"+ skip=+\\\\\|\\"+ end=+"\@!$+
-    \ contains=hsSpecialChar,@Spell
+  if a:multiline_strings
+    syntax match hsLineContinuation
+      \ "\%(\\$\|^\s*\\\)"
+      \ contained
 
-  syntax region hsString
-    \ start=+"+ skip=+\\\\\|\\"+ end=+"+
-    \ oneline contains=hsSpecialChar,@Spell
+    syntax region hsString
+      \ start=+"+ skip=+\\\\\|\\"+ end=+"+
+      \ contains=hsSpecialChar,@Spell,hsLineContinuation
+
+  else
+    syntax region hsStringError
+      \ start=+"+ skip=+\\\\\|\\"+ end=+"\@!$+
+      \ contains=hsSpecialChar,@Spell
+
+    syntax region hsString
+      \ start=+"+ skip=+\\\\\|\\"+ end=+"+
+      \ oneline contains=hsSpecialChar,@Spell
+
+  endif
 
   highlight! link hsSpecialChar SpecialChar
+  highlight! link hsLineContinuation SpecialChar
   highlight! link hsSpecialCharError Error
   highlight! link hsCharacter Character
   highlight! link hsStringError Error
@@ -186,7 +199,7 @@ function! vim2hs#haskell#syntax#comments(conceal_comments, conceal_enumerations)
 
   if a:conceal_enumerations
     syntax match hsLANGUAGEPragma
-      \ '\%(LANGUAGE\s\+\)\@<=.*,.*\%(\s\+\)\@='
+      \ 'LANGUAGE\s\+\zs.*,.*\ze\s\+#-}'
       \ contained conceal cchar=…
 
     syntax region hsPragma
@@ -274,13 +287,21 @@ function! vim2hs#haskell#syntax#cpp() " {{{
     \ skip="\\$"
     \ end="$"
 
+  syntax region cppDefine
+    \ start='^#\s*\%(define\)\>'
+    \ end='$'
+
+  syntax region cppInclude
+    \ start='^#\s*\%(include\)\>\s*\%("\f\+"\|<\f\+>\)$'
+    \ end='$'
+
   highlight! link cppPreCondit PreCondit
+  highlight! link cppDefine Define
+  highlight! link cppInclude Include
 endfunction "}}}
 
 
 function! vim2hs#haskell#syntax#th() " {{{
-  syntax match hsTHMacro "^\k\+\%(.*=\|.*::\)\@!"
-
   syntax region hsTHContent matchgroup=hsTHSplice
     \ start="\$(" end=")"
     \ contains=TOP
@@ -289,7 +310,6 @@ function! vim2hs#haskell#syntax#th() " {{{
     \ start="\[\$\?[edtp]\?|" end="|\]"
     \ contains=TOP
 
-  highlight! link hsTHMacro Macro
   highlight! link hsTHSplice Macro
   highlight! link hsTHQuote Delimiter
 endfunction " }}}

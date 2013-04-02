@@ -11,8 +11,6 @@ data Something
     = Something
     | Other
 
-makeLens ''Something
-
 isLarge :: (Ord a, Num a) => a -> String
 isLarge x
   | x > 10    = "yep"
@@ -25,3 +23,7 @@ instance Functor [] where
 
 ($) :: (a -> b) -> a -> b
 f $ x =  f x
+
+buildLib
+  :: Verbosity -> PackageDescription -> LocalBuildInfo
+  -> Library -> ComponentLocalBuildInfo -> IO ()

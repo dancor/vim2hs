@@ -70,9 +70,6 @@ This screenshot showcases a number of nice features:
 * In function definitions, the name of the function is highlighted
   differently from its arguments, even if the equal sign is on another line
   (most or all other syntax highlighters get this wrong).
-* Template Haskell declaration splices are highlighted as pre-processor
-  macros, without conflicting with the highlighting of function definitions
-  or data declarations etc (again, most others get this wrong)
 * Top-level definitions such as functions, classes and instances and data
   declarations form folds, as you can see in the `foldcolumn` to the left
   of the line numbers.  Closed folds are given a consistent `foldtext`
@@ -154,15 +151,19 @@ and automatic filetype detection for `*.tpl` files.
 
 Haskell actually supports multi-line strings by escaping the newline, but I
 don't think it's a widely used feature and I think quasi quoting is better
-for such purposes.  Thus I have opted to keep string literals from crossing
-lines so half your source file doesn't highlight as a string while you're
-entering one, and instead, string literals without a matching end quote
+for such purposes.  Thus, by default, I have opted to keep string literals from
+crossing lines so half your source file doesn't highlight as a string while
+you're entering one. Instead, string literals without a matching end quote
 highlight as errors.
 
 ![Strings screenshot](https://github.com/dag/vim2hs/raw/master/screenshots/strings.png)
 
-There are currently no configuration options for this, but I might add one
-in the future if anyone is actually using the escaped newline syntax.
+There is a configuration option for this. To enable multi-line strings, use
+this:
+
+```vim
+:let g:haskell_multiline_strings = 1
+```
 
 ### HLint
 
