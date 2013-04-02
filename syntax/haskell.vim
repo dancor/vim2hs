@@ -69,9 +69,9 @@ if g:haskell_xml
   call vim2hs#haskell#quasi#xml()
 endif
 
-if g:haskell_hsp
-  call vim2hs#haskell#syntax#hsp()
-endif
+" if g:haskell_hsp
+"   call vim2hs#haskell#syntax#hsp()
+" endif
 
 if g:haskell_conceal
   call vim2hs#haskell#conceal#simple()

@@ -295,44 +295,44 @@ function! vim2hs#haskell#syntax#th() " {{{
 endfunction " }}}
 
 
-function! vim2hs#haskell#syntax#hsp() " {{{
-  syntax match hspContain
-    \ "<%>\|</%>"
-    \ display
-
-  syntax match hspTag
-    \ "<\w\+/>\|</\w\+>"
-    \ display
-
-  syntax match hspAttrValue
-    \ ""
-    \ display contained contains=TOP
-
-  syntax match hspAttrName
-    \ "\w\+="
-    \ display contained
-
-  syntax region hspText matchgroup=hspTag
-    \ start="<\z(\w\+\)>" end="</\z1>"
-    \ contains=hspHaskell,hspTag,hspText,hspAttr
-
-  syntax region hspAttr matchgroup=hspTag
-    \ start="<\w\+\_s" end="/\?>"
-    \ contains=hspAttrName,hspAttrValue
-
-  syntax region hspHaskell matchgroup=hspSplice
-    \ start="<%>\@!" end="\%(</\)\@!%>"
-    \ contains=TOP
-
-  syntax region hspQQContent matchgroup=hspQQuote
-    \ start="\[\$\?hsx|" end="|\]"
-    \ contains=TOP
-
-  highlight! link hspContain Delimiter
-  highlight! link hspTag PreProc
-  highlight! link hspAttrName Constant
-  highlight! link hspSplice Macro
-  highlight! link hspQQuote Delimiter
-  highlight! link hspQQContent String
-  highlight! link hspText String
-endfunction " }}}
+" function! vim2hs#haskell#syntax#hsp() " {{{
+"   syntax match hspContain
+"     \ "<%>\|</%>"
+"     \ display
+"
+"   syntax match hspTag
+"     \ "<\w\+/>\|</\w\+>"
+"     \ display
+"
+"   syntax match hspAttrValue
+"     \ ""
+"     \ display contained contains=TOP
+"
+"   syntax match hspAttrName
+"     \ "\w\+="
+"     \ display contained
+"
+"   syntax region hspText matchgroup=hspTag
+"     \ start="<\z(\w\+\)>" end="</\z1>"
+"     \ contains=hspHaskell,hspTag,hspText,hspAttr
+"
+"   syntax region hspAttr matchgroup=hspTag
+"     \ start="<\w\+\_s" end="/\?>"
+"     \ contains=hspAttrName,hspAttrValue
+"
+"   syntax region hspHaskell matchgroup=hspSplice
+"     \ start="<%>\@!" end="\%(</\)\@!%>"
+"     \ contains=TOP
+"
+"   syntax region hspQQContent matchgroup=hspQQuote
+"     \ start="\[\$\?hsx|" end="|\]"
+"     \ contains=TOP
+"
+"   highlight! link hspContain Delimiter
+"   highlight! link hspTag PreProc
+"   highlight! link hspAttrName Constant
+"   highlight! link hspSplice Macro
+"   highlight! link hspQQuote Delimiter
+"   highlight! link hspQQContent String
+"   highlight! link hspText String
+" endfunction " }}}
